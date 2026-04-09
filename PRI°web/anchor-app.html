@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANCHOR App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --outer:#4d4141;
+      --surface:#ffffff;
+      --surface-soft:#f4f6fb;
+      --line:#d5d7e4;
+      --ink:#151824;
+      --muted:#697185;
+      --primary:#6173d8;
+      --primary-dark:#1e2f53;
+      --success:#4f9f74;
+      --warn:#cf7460;
+      --shadow:0 36px 80px rgba(0,0,0,.22);
+      --radius:34px;
+      --soft-radius:24px;
+    }
+
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:"Public Sans",sans-serif;
+      color:var(--ink);
+      background:var(--outer);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px 12px;
+    }
+
+    a { color:inherit; text-decoration:none; }
+    button,input,select,textarea { font:inherit; }
+
+    .phone-wrap { width:min(430px,100%); }
+    .phone {
+      position:relative;
+      background:linear-gradient(180deg,#fdfdfd 0%, #f7f8fb 100%);
+      border:4px solid #161616;
+      border-radius:52px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      min-height:860px;
+    }
+
+    .phone::before {
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:44px;
+      border:2px solid rgba(0,0,0,.22);
+      pointer-events:none;
+    }
+
+    .notch {
+      position:absolute;
+      top:14px;
+      left:50%;
+      transform:translateX(-50%);
+      width:112px;
+      height:30px;
+      background:#050505;
+      border-radius:999px;
+      z-index:4;
+      box-shadow:inset 0 -2px 4px rgba(255,255,255,.08);
+    }
+
+    .chrome {
+      position:relative;
+      z-index:2;
+      padding:56px 20px 18px;
+      min-height:860px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+    }
+
+    .topbar {
+      display:grid;
+      gap:12px;
+      color:var(--muted);
+      font-size:.86rem;
+    }
+
+    .toprow {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .back-link { font-weight:600; color:#35405d; }
+    .brand { font-family:"Fraunces",serif; font-size:1rem; color:#1f3256; }
+
+    .status-row {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .status-pill {
+      padding:7px 11px;
+      border-radius:999px;
+      background:#eef1f8;
+      color:#51617f;
+      border:1px solid #dde2f0;
+      font-size:.75rem;
+    }
+
+    .status-pill.ok { color:#2d7e57; background:#edf8f1; border-color:#cfead8; }
+    .status-pill.warn { color:#a35646; background:#fff0ec; border-color:#f1d0c8; }
+
+    .warning-box,
+    .message-box,
+    .focus-card,
+    .sheet,
+    .summary-card,
+    .check-card {
+      border-radius:var(--soft-radius);
+      border:1px solid var(--line);
+      background:var(--surface);
+    }
+
+    .warning-box,
+    .message-box,
+    .sheet,
+    .summary-card,
+    .check-card { padding:16px; }
+
+    .warning-box {
+      display:none;
+      color:#9c4f44;
+      background:#fff1ee;
+      border-color:#efc5bc;
+    }
+
+    .warning-box.show { display:block; }
+
+    .screen-stack {
+      position:relative;
+      overflow:hidden;
+      border-radius:34px;
+      background:rgba(255,255,255,.62);
+    }
+
+    .screen {
+      display:none;
+      min-height:620px;
+      padding:22px 18px 18px;
+      gap:18px;
+      align-content:start;
+      background:linear-gradient(180deg,#ffffff 0%, #f7f8fb 100%);
+    }
+
+    .screen.active { display:grid; }
+
+    .hero-screen {
+      align-content:center;
+      text-align:center;
+      padding-top:44px;
+    }
+
+    .hero-mark {
+      width:164px;
+      height:164px;
+      margin:0 auto 6px;
+      border-radius:42px;
+      background:radial-gradient(circle at top left, #ffffff 0%, #eef2fa 64%, #e6ebf5 100%);
+      display:grid;
+      place-items:center;
+      color:var(--primary-dark);
+      box-shadow:inset 0 -18px 28px rgba(93,108,200,.08);
+    }
+
+    .hero-anchor {
+      font-family:"Fraunces",serif;
+      font-size:5rem;
+      line-height:1;
+    }
+
+    h1,h2,h3 {
+      margin:0;
+      font-family:"Fraunces",serif;
+      line-height:1.06;
+      font-weight:600;
+    }
+
+    h1 { font-size:2.6rem; }
+    h2 { font-size:1.95rem; }
+    h3 { font-size:1.12rem; }
+    p { margin:0; color:var(--muted); line-height:1.58; }
+
+    .lead {
+      font-size:1rem;
+      color:#30384d;
+    }
+
+    .micro {
+      font-size:.82rem;
+      color:var(--muted);
+    }
+
+    .fields,
+    .step-list,
+    .app-list,
+    .choice-grid,
+    .action-row,
+    .auth-switch {
+      display:grid;
+      gap:12px;
+    }
+
+    .two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    label {
+      display:grid;
+      gap:8px;
+      font-size:.92rem;
+      color:#36415c;
+    }
+
+    input,
+    select,
+    textarea {
+      width:100%;
+      min-height:50px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#f6f7fb;
+      color:var(--ink);
+    }
+
+    textarea { min-height:96px; resize:vertical; }
+
+    .primary-button,
+    .secondary-button,
+    .tab-button,
+    .nav-button,
+    .chip-button {
+      border:0;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height:50px;
+      padding:0 18px;
+      border-radius:999px;
+      font-weight:700;
+    }
+
+    .primary-button {
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .secondary-button {
+      background:transparent;
+      border:1px solid #d6daf0;
+      color:#42538c;
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover,
+    .tab-button:hover,
+    .nav-button:hover,
+    .chip-button:hover { transform:translateY(-1px); }
+
+    .auth-switch {
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      background:#eef1f8;
+      padding:6px;
+      border-radius:999px;
+    }
+
+    .tab-button {
+      min-height:42px;
+      border-radius:999px;
+      background:transparent;
+      color:#586789;
+      font-weight:700;
+    }
+
+    .tab-button.active {
+      background:#fff;
+      color:#263862;
+      box-shadow:0 8px 16px rgba(62,80,139,.12);
+    }
+
+    .screen-head {
+      display:grid;
+      gap:10px;
+    }
+
+    .section-label {
+      font-size:.8rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#7d89a3;
+    }
+
+    .message-box {
+      display:grid;
+      gap:8px;
+      color:#40506f;
+      background:#f7f8fc;
+    }
+
+    .choice-grid {
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .chip-button {
+      min-height:36px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#eef0f4;
+      color:#5a6278;
+    }
+
+    .chip-button.active {
+      background:#e3e7fb;
+      color:#35498f;
+    }
+
+    .sheet,
+    .summary-card,
+    .check-card {
+      display:grid;
+      gap:10px;
+      background:#fbfbfe;
+    }
+
+    .step-list,
+    .app-list {
+      gap:10px;
+    }
+
+    .step-item,
+    .app-item {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:13px 14px;
+      border-radius:18px;
+      background:#f2f4fb;
+      color:#27324b;
+    }
+
+    .app-item span:last-child,
+    .step-meta {
+      color:#687590;
+      font-size:.84rem;
+    }
+
+    .focus-screen {
+      background:linear-gradient(180deg,#0f1523 0%, #171f32 100%);
+      color:#f4f6ff;
+    }
+
+    .focus-screen p,
+    .focus-screen .section-label,
+    .focus-screen .app-item span:last-child { color:#ccd3e4; }
+
+    .focus-card {
+      padding:18px;
+      background:rgba(15,21,35,.78);
+      border-color:rgba(255,255,255,.08);
+    }
+
+    .focus-card .app-item {
+      background:rgba(255,255,255,.06);
+      color:#f6f7fb;
+    }
+
+    .checkbox-line {
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:13px 14px;
+      border-radius:18px;
+      background:#f5f6fb;
+    }
+
+    .checkbox-line input {
+      width:18px;
+      min-height:auto;
+      margin-top:3px;
+      padding:0;
+    }
+
+    .bottom-nav {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:8px;
+      padding:8px 0 4px;
+      border-top:1px solid rgba(110,122,154,.16);
+    }
+
+    .nav-button {
+      min-height:46px;
+      border-radius:18px;
+      background:transparent;
+      color:#7b869e;
+      font-size:.76rem;
+      font-weight:700;
+    }
+
+    .nav-button.active {
+      background:#edf1ff;
+      color:#3b4e8d;
+    }
+
+    .nav-button:disabled { opacity:.42; cursor:not-allowed; transform:none; }
+
+    @media (max-width:480px) {
+      body { padding:8px; }
+      .phone { min-height:820px; border-radius:40px; }
+      .chrome { min-height:820px; padding:54px 16px 16px; }
+      .screen { min-height:592px; padding:20px 14px 16px; }
+      .two,
+      .choice-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="chrome">
+        <header class="topbar">
+          <div class="toprow">
+            <a class="back-link" href="/">Volver a la web</a>
+            <div class="brand">ANCHOR</div>
+          </div>
+          <div class="status-row">
+            <div class="status-pill" id="backendBadge">Servidor...</div>
+            <div class="status-pill" id="aiBadge">IA...</div>
+            <div class="status-pill" id="sessionBadge">Sin sesión</div>
+          </div>
+          <div class="warning-box" id="hostWarning">Abre esta app desde <strong>/app</strong> y no como archivo local para que el flujo sí funcione.</div>
+        </header>
+
+        <main class="screen-stack">
+          <!-- TODO Flutter: estas pantallas ya estan separadas por flujo para pasarlas luego a mobile -->
+          <section class="screen hero-screen active" data-screen="welcome">
+            <div class="hero-mark">
+              <div class="hero-anchor">A</div>
+            </div>
+            <h1>ANCHOR</h1>
+            <p class="lead">Rutina inteligente para pasar de la distracción al propósito.</p>
+            <p>
+              La idea de la app no es llenarte de botones, sino darte una meta clara, una rutina corta y
+              un seguimiento que de verdad se entienda.
+            </p>
+            <div class="action-row">
+              <button class="primary-button" id="startFlowButton" type="button">Iniciar</button>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="auth">
+            <div class="screen-head">
+              <div class="section-label">Cuenta</div>
+              <h2>Iniciar sesión / Registro</h2>
+              <p>La alfa usa usuario y contraseña. Primero entras, luego ya guardas metas y check-ins reales.</p>
+            </div>
+            <div class="auth-switch">
+              <button class="tab-button active" type="button" id="loginModeButton">Entrar</button>
+              <button class="tab-button" type="button" id="registerModeButton">Registro</button>
+            </div>
+            <div class="fields">
+              <label>Usuario
+                <input id="authUsername" type="text" placeholder="anchor_user">
+              </label>
+              <label>Contraseña
+                <input id="authPassword" type="password" placeholder="ClaveSegura1">
+              </label>
+            </div>
+            <div class="action-row">
+              <button class="primary-button" id="authSubmitButton" type="button">Iniciar sesión</button>
+              <button class="secondary-button" id="authContinueButton" type="button">Seguir sin entrar</button>
+            </div>
+            <div class="message-box" id="authMessage">
+              <div class="section-label">Cuenta</div>
+              <p>Cuando inicies sesión, la meta y el progreso ya quedan guardados de verdad.</p>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="routine">
+            <div class="screen-head">
+              <div class="section-label">Tu rutina</div>
+              <h2>Crea una meta simple</h2>
+              <p>Primero arma la meta, luego ANCHOR te sugiere una rutina y después puedes guardarla o ajustarla.</p>
+            </div>
+            <div class="fields">
+              <label>Meta principal
+                <input id="goalTitle" type="text" placeholder="Dormir mejor">
+              </label>
+              <label>Descripción
+                <textarea id="goalDescription" placeholder="Dormir antes de las 10:30 pm y dejar el celular fuera del cuarto"></textarea>
+              </label>
+            </div>
+            <div class="fields two">
+              <label>Categoría
+                <select id="goalCategory">
+                  <option value="sleep">Sleep</option>
+                  <option value="study">Study</option>
+                  <option value="exercise">Exercise</option>
+                  <option value="reading">Reading</option>
+                  <option value="focus">Focus</option>
+                  <option value="general" selected>General</option>
+                </select>
+              </label>
+              <label>Horario ideal
+                <input id="idealTime" type="time" value="21:45">
+              </label>
+            </div>
+            <label>Apps o distractores a vigilar
+              <input id="goalTargetNote" type="text" placeholder="TikTok, Instagram, YouTube">
+            </label>
+            <div class="choice-grid">
+              <button class="chip-button" type="button" data-chip="TikTok">TikTok</button>
+              <button class="chip-button" type="button" data-chip="Instagram">Instagram</button>
+              <button class="chip-button" type="button" data-chip="YouTube">YouTube</button>
+              <button class="chip-button" type="button" data-chip="WhatsApp">WhatsApp</button>
+              <button class="chip-button" type="button" data-chip="X">X</button>
+              <button class="chip-button" type="button" data-chip="Leer">Leer</button>
+            </div>
+            <div class="action-row">
+              <button class="primary-button" id="suggestPlanButton" type="button">Generar rutina</button>
+              <button class="secondary-button" id="saveGoalButton" type="button">Guardar meta</button>
+            </div>
+            <div class="sheet" id="planSheet">
+              <div class="section-label">Rutina sugerida</div>
+              <p>Cuando escribas tu meta, aquí aparecerá una propuesta corta con pasos claros.</p>
+            </div>
+            <div class="sheet">
+              <div class="section-label">Agregar paso manual</div>
+              <div class="fields two">
+                <label>Paso
+                  <input id="stepTitle" type="text" placeholder="Apagar notificaciones">
+                </label>
+                <label>Hora
+                  <input id="stepTime" type="time" value="21:45">
+                </label>
+              </div>
+              <div class="action-row">
+                <button class="secondary-button" id="createStepButton" type="button">Agregar paso</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen focus-screen" data-screen="focus">
+            <!-- Nota equipo: el modo enfoque por ahora es un simulacro visual hasta conectar permisos reales -->
+            <div class="screen-head">
+              <div class="section-label">Modo oscuro</div>
+              <h2>Modo enfoque</h2>
+              <p>Así se vería una lista limpia de apps vigiladas sin logos, solo con nombre y estado.</p>
+            </div>
+            <div class="focus-card">
+              <div class="section-label">Apps activas</div>
+              <div class="app-list" id="focusAppList"></div>
+            </div>
+            <div class="focus-card" id="focusSummary">
+              <div class="section-label">Resumen</div>
+              <p>Cuando tengas una meta, aquí se amarra la lista de apps a tu rutina.</p>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="progress">
+            <div class="screen-head">
+              <div class="section-label">Progreso</div>
+              <h2>Tu seguimiento del día</h2>
+              <p>Selecciona la meta, marca lo que sí hiciste y guarda un check-in corto.</p>
+            </div>
+            <div class="fields">
+              <label>Meta activa
+                <select id="goalSelect">
+                  <option value="">Primero guarda una meta</option>
+                </select>
+              </label>
+            </div>
+            <div class="summary-card" id="goalSummary">
+              <div class="section-label">Resumen de hoy</div>
+              <p>Cuando exista una meta, aquí verás progreso, racha y categoría.</p>
+            </div>
+            <div class="check-card">
+              <div class="section-label">Pasos de hoy</div>
+              <div class="step-list" id="checkinSteps">
+                <p class="micro">Todavía no hay pasos para marcar.</p>
+              </div>
+            </div>
+            <label>Nota del día
+              <textarea id="checkinNote" placeholder="Hoy sí dejé el celular fuera del cuarto."></textarea>
+            </label>
+            <div class="action-row">
+              <button class="primary-button" id="saveCheckinButton" type="button">Guardar check-in</button>
+              <button class="secondary-button" id="logoutButton" type="button">Cerrar sesión</button>
+            </div>
+            <div class="message-box" id="progressMessage">
+              <div class="section-label">Estado</div>
+              <p>Cuando guardes el check-in, aquí se mostrará el resultado.</p>
+            </div>
+          </section>
+        </main>
+
+        <nav class="bottom-nav">
+          <button class="nav-button active" data-target="welcome" type="button">Inicio</button>
+          <button class="nav-button" data-target="auth" type="button">Cuenta</button>
+          <button class="nav-button" data-target="routine" type="button">Rutina</button>
+          <button class="nav-button" data-target="focus" type="button">Focus</button>
+          <button class="nav-button" data-target="progress" type="button">Hoy</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const state = {
+        token: localStorage.getItem("anchorToken") || "",
+        user: null,
+        goals: [],
+        currentGoalId: "",
+        lastPlan: null,
+        authMode: "login",
+        hosted: window.location.protocol === "http:" || window.location.protocol === "https:",
+        focusApps: [
+          { name: "TikTok", mode: "bloquear" },
+          { name: "Instagram", mode: "silenciar" },
+          { name: "YouTube", mode: "limitar" },
+          { name: "WhatsApp", mode: "priorizar" },
+          { name: "X", mode: "pausar" }
+        ]
+      };
+
+      const d = {
+        hostWarning: document.getElementById("hostWarning"),
+        backendBadge: document.getElementById("backendBadge"),
+        aiBadge: document.getElementById("aiBadge"),
+        sessionBadge: document.getElementById("sessionBadge"),
+        screens: Array.from(document.querySelectorAll(".screen")),
+        navButtons: Array.from(document.querySelectorAll(".nav-button")),
+        chipButtons: Array.from(document.querySelectorAll(".chip-button")),
+        startFlowButton: document.getElementById("startFlowButton"),
+        loginModeButton: document.getElementById("loginModeButton"),
+        registerModeButton: document.getElementById("registerModeButton"),
+        authUsername: document.getElementById("authUsername"),
+        authPassword: document.getElementById("authPassword"),
+        authSubmitButton: document.getElementById("authSubmitButton"),
+        authContinueButton: document.getElementById("authContinueButton"),
+        authMessage: document.getElementById("authMessage"),
+        goalTitle: document.getElementById("goalTitle"),
+        goalDescription: document.getElementById("goalDescription"),
+        goalCategory: document.getElementById("goalCategory"),
+        idealTime: document.getElementById("idealTime"),
+        goalTargetNote: document.getElementById("goalTargetNote"),
+        suggestPlanButton: document.getElementById("suggestPlanButton"),
+        saveGoalButton: document.getElementById("saveGoalButton"),
+        planSheet: document.getElementById("planSheet"),
+        stepTitle: document.getElementById("stepTitle"),
+        stepTime: document.getElementById("stepTime"),
+        createStepButton: document.getElementById("createStepButton"),
+        focusAppList: document.getElementById("focusAppList"),
+        focusSummary: document.getElementById("focusSummary"),
+        goalSelect: document.getElementById("goalSelect"),
+        goalSummary: document.getElementById("goalSummary"),
+        checkinSteps: document.getElementById("checkinSteps"),
+        checkinNote: document.getElementById("checkinNote"),
+        saveCheckinButton: document.getElementById("saveCheckinButton"),
+        progressMessage: document.getElementById("progressMessage"),
+        logoutButton: document.getElementById("logoutButton")
+      };
+
+      function setStatus(el, text, tone) {
+        el.textContent = text;
+        el.className = tone ? `status-pill ${tone}` : "status-pill";
+      }
+
+      function showMessage(el, title, message) {
+        el.innerHTML = `<div class="section-label">${title}</div><p>${message}</p>`;
+      }
+
+      function showScreen(name) {
+        d.screens.forEach((screen) => {
+          screen.classList.toggle("active", screen.dataset.screen === name);
+        });
+        d.navButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.target === name);
+        });
+      }
+
+      function switchAuthMode(mode) {
+        state.authMode = mode;
+        d.loginModeButton.classList.toggle("active", mode === "login");
+        d.registerModeButton.classList.toggle("active", mode === "register");
+        d.authSubmitButton.textContent = mode === "login" ? "Iniciar sesión" : "Crear cuenta";
+        showMessage(
+          d.authMessage,
+          "Cuenta",
+          mode === "login"
+            ? "Entra con tu usuario para guardar metas, pasos y progreso real."
+            : "Crea la cuenta aquí mismo y luego sigues con la rutina."
+        );
+      }
+
+      function parseError(detail) {
+        if (!detail) return "Pasó algo raro con la petición.";
+        if (typeof detail === "string") return detail;
+        if (Array.isArray(detail)) return detail.map((item) => item.msg || JSON.stringify(item)).join(" | ");
+        if (detail.message && Array.isArray(detail.issues)) return `${detail.message} ${detail.issues.join(" ")}`;
+        return detail.message || JSON.stringify(detail);
+      }
+
+      function localBlock() {
+        if (state.hosted) {
+          d.hostWarning.classList.remove("show");
+          return false;
+        }
+        d.hostWarning.classList.add("show");
+        setStatus(d.backendBadge, "Archivo local", "warn");
+        setStatus(d.aiBadge, "IA bloqueada", "warn");
+        setStatus(d.sessionBadge, "Usa /app", "warn");
+        return true;
+      }
+
+      async function api(path, options = {}) {
+        if (localBlock()) throw new Error("Abre esta app desde /app.");
+        const headers = { Accept: "application/json", ...(options.headers || {}) };
+        if (state.token) headers.Authorization = `Bearer ${state.token}`;
+        const config = { method: options.method || "GET", headers };
+        if (options.body !== undefined) {
+          headers["Content-Type"] = "application/json";
+          config.body = JSON.stringify(options.body);
+        }
+        const response = await fetch(path, config);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(parseError(data.detail || data.message || data));
+        return data;
+      }
+
+      function updateSessionUi(message) {
+        const logged = Boolean(state.user);
+        setStatus(d.sessionBadge, logged ? `Sesión ${state.user.username}` : "Sin sesión", logged ? "ok" : "warn");
+        d.saveGoalButton.disabled = !logged;
+        d.createStepButton.disabled = !logged || !state.currentGoalId;
+        d.saveCheckinButton.disabled = !logged || !state.currentGoalId;
+        showMessage(
+          d.authMessage,
+          logged ? "Cuenta activa" : "Cuenta",
+          message || (logged ? `Ya puedes guardar metas como ${state.user.username}.` : "Puedes mirar el flujo sin entrar, pero guardar necesita sesión.")
+        );
+      }
+
+      function attachChipHandlers() {
+        d.chipButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            button.classList.toggle("active");
+            const picked = d.chipButtons.filter((item) => item.classList.contains("active")).map((item) => item.dataset.chip);
+            if (picked.length) d.goalTargetNote.value = picked.join(", ");
+          });
+        });
+      }
+
+      function renderFocusApps() {
+        const target = d.goalTargetNote.value.trim();
+        const preferred = target ? target.split(",").map((item) => item.trim()).filter(Boolean) : [];
+        const apps = preferred.length
+          ? preferred.map((name, index) => ({ name, mode: ["bloquear", "silenciar", "limitar", "pausar", "priorizar"][index % 5] }))
+          : state.focusApps;
+        d.focusAppList.innerHTML = apps.map((app) => `<div class="app-item"><span>${app.name}</span><span>${app.mode}</span></div>`).join("");
+        d.focusSummary.innerHTML = `
+          <div class="section-label">Resumen</div>
+          <p>${state.lastPlan ? `La rutina sugerida para "${state.lastPlan.title}" puede apoyarse con este modo oscuro de enfoque.` : "Cuando tengas una meta, aquí se amarra la lista de apps a tu rutina."}</p>
+        `;
+      }
+
+      function fillGoalFromPlan(plan) {
+        d.goalTitle.value = plan.title || "";
+        d.goalDescription.value = plan.goal_text || "";
+        d.goalCategory.value = plan.category || "general";
+        d.goalTargetNote.value = plan.steps && plan.steps.length ? plan.steps[0] : "";
+        renderFocusApps();
+      }
+
+      function renderPlan(plan) {
+        d.planSheet.innerHTML = `
+          <div class="section-label">Rutina sugerida</div>
+          <h3>${plan.title}</h3>
+          <p><strong>Meta:</strong> ${plan.goal_text}</p>
+          <p><strong>Fuente:</strong> ${plan.source}</p>
+          <div class="step-list">
+            ${plan.steps.map((step) => `<div class="step-item"><span>${step}</span><span class="step-meta">paso sugerido</span></div>`).join("")}
+          </div>
+        `;
+      }
+
+      function getGoalById(goalId) {
+        return state.goals.find((goal) => String(goal.id) === String(goalId));
+      }
+
+      function renderGoalSelect() {
+        const title = state.goals.length ? "Escoge una meta" : "Primero guarda una meta";
+        const options = state.goals.map((goal) => `<option value="${goal.id}">${goal.title}</option>`).join("");
+        d.goalSelect.innerHTML = `<option value="">${title}</option>${options}`;
+        if (state.currentGoalId) d.goalSelect.value = String(state.currentGoalId);
+      }
+
+      function renderGoalSummary() {
+        const goal = getGoalById(state.currentGoalId);
+        if (!goal) {
+          d.goalSummary.innerHTML = `<div class="section-label">Resumen de hoy</div><p>Cuando exista una meta, aquí verás progreso, racha y categoría.</p>`;
+          d.checkinSteps.innerHTML = `<p class="micro">Todavía no hay pasos para marcar.</p>`;
+          d.createStepButton.disabled = true;
+          d.saveCheckinButton.disabled = true;
+          return;
+        }
+        d.goalSummary.innerHTML = `
+          <div class="section-label">Resumen de hoy</div>
+          <h3>${goal.title}</h3>
+          <p>${goal.description || "Sin descripción corta."}</p>
+          <p class="micro">Categoría: ${goal.category} · Racha: ${goal.stats.current_streak} · Check-ins: ${goal.stats.total_checkins}</p>
+        `;
+        d.checkinSteps.innerHTML = goal.routine_steps.length
+          ? goal.routine_steps.map((step) => `
+              <label class="checkbox-line">
+                <input type="checkbox" value="${step.id}">
+                <span>
+                  <strong>${step.title}</strong><br>
+                  <span class="step-meta">${step.scheduled_time || "Sin hora fija"} · orden ${step.step_order}</span>
+                </span>
+              </label>
+            `).join("")
+          : `<p class="micro">Todavía no hay pasos guardados para esta meta.</p>`;
+        d.createStepButton.disabled = !state.user;
+        d.saveCheckinButton.disabled = !state.user;
+      }
+
+      async function boot() {
+        try {
+          const health = await api("/health");
+          setStatus(d.backendBadge, "Servidor ok", "ok");
+          const config = await api("/app-config");
+          setStatus(d.aiBadge, config.ai_enabled ? `IA ${config.ai_provider}` : "IA local", config.ai_enabled ? "ok" : "warn");
+          showMessage(d.progressMessage, "Servidor", health.message || "Backend arriba.");
+        } catch (error) {
+          setStatus(d.backendBadge, "Error servidor", "warn");
+          setStatus(d.aiBadge, "IA sin confirmar", "warn");
+          showMessage(d.progressMessage, "Servidor", error.message);
+        }
+      }
+
+      async function hydrate() {
+        if (!state.token) {
+          updateSessionUi();
+          return;
+        }
+        try {
+          const data = await api("/users/me");
+          state.user = data.user;
+          updateSessionUi();
+        } catch (error) {
+          state.token = "";
+          state.user = null;
+          localStorage.removeItem("anchorToken");
+          updateSessionUi("La sesión guardada ya no sirve, toca entrar otra vez.");
+        }
+      }
+
+      async function loadGoals() {
+        if (!state.token) {
+          state.goals = [];
+          state.currentGoalId = "";
+          renderGoalSelect();
+          renderGoalSummary();
+          return;
+        }
+        try {
+          const data = await api("/goals");
+          state.goals = data.goals || [];
+          if (!state.currentGoalId && state.goals.length) state.currentGoalId = String(state.goals[0].id);
+          if (state.currentGoalId && !getGoalById(state.currentGoalId) && state.goals.length) state.currentGoalId = String(state.goals[0].id);
+          renderGoalSelect();
+          renderGoalSummary();
+        } catch (error) {
+          showMessage(d.progressMessage, "Metas", error.message);
+        }
+      }
+
+      async function handleAuthSubmit() {
+        const payload = {
+          username: d.authUsername.value.trim(),
+          password: d.authPassword.value
+        };
+        const path = state.authMode === "login" ? "/auth/login" : "/auth/register";
+        try {
+          const data = await api(path, { method: "POST", body: payload });
+          if (state.authMode === "register") {
+            switchAuthMode("login");
+            d.authUsername.value = data.user.username;
+            d.authPassword.value = "";
+            showMessage(d.authMessage, "Registro", `Usuario ${data.user.username} creado. Ahora entra con esa cuenta.`);
+            return;
+          }
+          state.token = data.access_token;
+          state.user = data.user;
+          localStorage.setItem("anchorToken", state.token);
+          updateSessionUi(`Ya entraste como ${state.user.username}.`);
+          await loadGoals();
+          showScreen("routine");
+        } catch (error) {
+          showMessage(d.authMessage, state.authMode === "login" ? "Login" : "Registro", error.message);
+        }
+      }
+
+      async function suggestPlan() {
+        try {
+          const goalText = d.goalDescription.value.trim() || d.goalTitle.value.trim() || "mejorar mi rutina diaria";
+          const plan = await api("/plans/suggest", { method: "POST", body: { goal_text: goalText } });
+          state.lastPlan = plan;
+          renderPlan(plan);
+          fillGoalFromPlan(plan);
+          showMessage(d.progressMessage, "Rutina", "La sugerencia ya quedó lista. Puedes ajustarla o guardarla.");
+        } catch (error) {
+          showMessage(d.progressMessage, "Rutina", error.message);
+        }
+      }
+
+      async function saveGoal() {
+        if (!state.user) {
+          showMessage(d.progressMessage, "Meta", "Primero necesitas iniciar sesión para guardar una meta real.");
+          showScreen("auth");
+          return;
+        }
+        try {
+          const payload = {
+            title: d.goalTitle.value.trim(),
+            description: d.goalDescription.value.trim(),
+            category: d.goalCategory.value,
+            target_note: [d.idealTime.value, d.goalTargetNote.value.trim()].filter(Boolean).join(" | ")
+          };
+          const data = await api("/goals", { method: "POST", body: payload });
+          state.currentGoalId = String(data.goal.id);
+          await loadGoals();
+          renderFocusApps();
+          showMessage(d.progressMessage, "Meta", "Meta guardada. Ya puedes agregar pasos o hacer seguimiento.");
+          showScreen("focus");
+        } catch (error) {
+          showMessage(d.progressMessage, "Meta", error.message);
+        }
+      }
+
+      async function createStep() {
+        if (!state.user || !state.currentGoalId) {
+          showMessage(d.progressMessage, "Paso", "Primero guarda una meta para poder agregar pasos.");
+          return;
+        }
+        try {
+          const goal = getGoalById(state.currentGoalId);
+          const nextOrder = goal && goal.routine_steps.length ? goal.routine_steps.length + 1 : 1;
+          await api(`/goals/${state.currentGoalId}/steps`, {
+            method: "POST",
+            body: {
+              title: d.stepTitle.value.trim(),
+              scheduled_time: d.stepTime.value || null,
+              step_order: nextOrder
+            }
+          });
+          d.stepTitle.value = "";
+          await loadGoals();
+          showMessage(d.progressMessage, "Paso", "Paso agregado a la rutina.");
+        } catch (error) {
+          showMessage(d.progressMessage, "Paso", error.message);
+        }
+      }
+
+      async function saveCheckin() {
+        if (!state.user || !state.currentGoalId) {
+          showMessage(d.progressMessage, "Check-in", "Primero entra y guarda una meta para poder registrar progreso.");
+          return;
+        }
+        const ids = Array.from(d.checkinSteps.querySelectorAll('input[type="checkbox"]:checked')).map((item) => Number(item.value));
+        try {
+          await api(`/goals/${state.currentGoalId}/checkins`, {
+            method: "POST",
+            body: {
+              completed_step_ids: ids,
+              note: d.checkinNote.value.trim()
+            }
+          });
+          d.checkinNote.value = "";
+          await loadGoals();
+          showMessage(d.progressMessage, "Check-in", "Seguimiento guardado. Ya quedó reflejado en tu meta.");
+          showScreen("progress");
+        } catch (error) {
+          showMessage(d.progressMessage, "Check-in", error.message);
+        }
+      }
+
+      function logout() {
+        state.token = "";
+        state.user = null;
+        state.goals = [];
+        state.currentGoalId = "";
+        localStorage.removeItem("anchorToken");
+        renderGoalSelect();
+        renderGoalSummary();
+        updateSessionUi("Sesión cerrada. La app sigue visible, pero guardar queda bloqueado.");
+        showScreen("auth");
+      }
+
+      function initNav() {
+        d.navButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const target = button.dataset.target;
+            if ((target === "progress" || target === "focus") && !state.currentGoalId && target !== "focus") {
+              showMessage(d.progressMessage, "Navegación", "Primero guarda una meta para que esta vista tenga sentido.");
+            }
+            showScreen(target);
+          });
+        });
+      }
+
+      function bindEvents() {
+        d.startFlowButton.addEventListener("click", () => showScreen("auth"));
+        d.loginModeButton.addEventListener("click", () => switchAuthMode("login"));
+        d.registerModeButton.addEventListener("click", () => switchAuthMode("register"));
+        d.authSubmitButton.addEventListener("click", handleAuthSubmit);
+        d.authContinueButton.addEventListener("click", () => showScreen("routine"));
+        d.suggestPlanButton.addEventListener("click", suggestPlan);
+        d.saveGoalButton.addEventListener("click", saveGoal);
+        d.createStepButton.addEventListener("click", createStep);
+        d.goalSelect.addEventListener("change", () => {
+          state.currentGoalId = d.goalSelect.value;
+          renderGoalSummary();
+        });
+        d.saveCheckinButton.addEventListener("click", saveCheckin);
+        d.logoutButton.addEventListener("click", logout);
+      }
+
+      // TODO Backend: si cambia el contrato de goals o checkins, tocar este flujo
+      attachChipHandlers();
+      renderFocusApps();
+      switchAuthMode("login");
+      initNav();
+      bindEvents();
+      renderGoalSelect();
+      renderGoalSummary();
+      updateSessionUi();
+      boot().then(hydrate).then(loadGoals);
+    })();
+  </script>
+</body>
+</html>

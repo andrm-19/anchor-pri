@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: anchor-pri-web
+    runtime: python
+    # esto instala lo basico pa subir rapido :D
+    buildCommand: pip install -r requirements.txt
+    # esto levanta api + pri en una sola vuelta :v
+    startCommand: cd Anchor-Backend/Zenmode_api && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # esto deja la demo andando aunque render reinicie :v
+      - key: DB_FILE
+        value: /tmp/anchor-demo.db
+      - key: DEMO_MODE
+        value: "true"
+      - key: APP_NAME
+        value: ANCHOR
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
