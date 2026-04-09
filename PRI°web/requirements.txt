@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-bcrypt
-PyJWT
-pydantic
-httpx
